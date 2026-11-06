@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box}body{margin:0;font:14px system-ui,sans-serif;color:#43526b}
+.pad{width:min(100%,360px);margin:auto}canvas{display:block;width:100%;aspect-ratio:1;background:#111b29;border-radius:12px;cursor:crosshair;touch-action:none}
+.tools{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 6px}label{display:flex;align-items:center;gap:8px;font-size:13px}input{width:84px;accent-color:#007f73}button{background:#f7f8fa;border:1px solid #d9e0e8;color:#34445c;border-radius:8px;padding:9px 17px;font:inherit;cursor:pointer}button:hover{border-color:#007f73}button:focus-visible{outline:2px solid #007f73;outline-offset:3px}.hint{font-size:12px;text-align:center;color:#768297;margin:12px 0}
+</style></head><body><div class="pad">
+<canvas id="drawing" width="280" height="280" aria-label="손글씨 숫자 입력"></canvas>
+<div class="tools"><label>펜 굵기 <input id="width" type="range" min="8" max="28" value="18" aria-label="펜 굵기"></label><button id="clear" type="button">지우기</button></div>
+<p class="hint">마우스 또는 손가락으로 0~9 중 하나를 그려 주세요.</p></div>
+<script>
+const canvas=document.getElementById('drawing'),ctx=canvas.getContext('2d');
+let active=null,initialized=false,revision=0,lastHeight=0;
+function send(type,data={}){window.parent.postMessage({isStreamlitMessage:true,type,...data},'*')}
+function resize(){const height=document.body.scrollHeight+4;if(height!==lastHeight){lastHeight=height;send('streamlit:setFrameHeight',{height})}}
+function blank(){ctx.fillStyle='#000';ctx.fillRect(0,0,280,280)}
+function publish(image){send('streamlit:setComponentValue',{value:{image,revision:++revision},dataType:'json'})}
+function point(e){const box=canvas.getBoundingClientRect();return [(e.clientX-box.left)*280/box.width,(e.clientY-box.top)*280/box.height]}
+canvas.addEventListener('pointerdown',e=>{if(e.button!==0||active!==null)return;e.preventDefault();active=e.pointerId;canvas.setPointerCapture(active);const [x,y]=point(e);ctx.lineWidth=Number(document.getElementById('width').value);ctx.strokeStyle=ctx.fillStyle='#fff';ctx.lineCap=ctx.lineJoin='round';ctx.beginPath();ctx.arc(x,y,ctx.lineWidth/2,0,2*Math.PI);ctx.fill();ctx.beginPath();ctx.moveTo(x,y)});
+canvas.addEventListener('pointermove',e=>{if(active!==e.pointerId)return;e.preventDefault();const [x,y]=point(e);ctx.lineTo(x,y);ctx.stroke()});
+function finish(e){if(active!==e.pointerId)return;active=null;publish(canvas.toDataURL('image/png'))}
+['pointerup','pointercancel','lostpointercapture'].forEach(name=>canvas.addEventListener(name,finish));
+document.getElementById('clear').addEventListener('click',()=>{active=null;blank();publish(null)});
+window.addEventListener('message',e=>{if(e.source!==window.parent||e.data.type!=='streamlit:render')return;if(!initialized){initialized=true;const saved=e.data.args.initial_image;if(saved){const image=new Image();image.onload=()=>ctx.drawImage(image,0,0,280,280);image.src=saved}}resize()});
+blank();new ResizeObserver(resize).observe(document.querySelector('.pad'));send('streamlit:componentReady',{apiVersion:1});resize();
+</script></body></html>

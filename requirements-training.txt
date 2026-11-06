@@ -1,0 +1,5 @@
+-r requirements.txt
+torchvision>=0.19,<1
+matplotlib>=3.8,<4
+nbformat>=5.10,<6
+nbclient>=0.10,<1
