@@ -2,6 +2,8 @@
 
 Colab에서 네 가지 CNN을 학습하고, Streamlit에서 직접 그린 숫자로 모델을 바꿔 가며 비교합니다. API 키 없이 Streamlit 서버에서 CPU 추론합니다.
 
+**웹 앱:** [MNIST Model Lab](https://mnist-model-lab-yongza.streamlit.app/) · [GitHub](https://github.com/yooongZa/mnist-model-lab)
+
 ## Colab 학습
 
 1. `MNIST_4모델_Colab.ipynb`를 Colab의 **파일 → 노트북 업로드**에서 엽니다.
@@ -71,7 +73,7 @@ model = nn.Sequential(
 
 GitHub 저장소에 앱 코드, `mnist_lab/`, `drawing_component/`, `requirements.txt`, `.streamlit/config.toml`, 필요한 `models/`와 `samples/`를 넣습니다. Community Cloud에서 이 저장소와 `streamlit_app.py`, Python 3.12를 선택합니다. Secrets 입력은 필요 없습니다. 업로드 파일과 접속 세션은 서비스 재시작 후 초기화될 수 있으므로 상시 모델은 저장소의 `models/`에 둡니다.
 
-현재 산출물은 로컬 실행용으로 준비했으며 공개 배포와 Colab 전체 학습은 아직 실행하지 않았습니다.
+2026-11-06 Streamlit Community Cloud에 공개 배포했습니다. Python 3.12와 CPU용 PyTorch를 사용합니다. 웹에는 기존 수업 CNN의 두 저장 형식이 기본 등록되어 있습니다. Colab에서 네 실험의 전체 학습을 실행하면 새 모델을 생성할 수 있습니다.
 
 ## 개발·검증
 
