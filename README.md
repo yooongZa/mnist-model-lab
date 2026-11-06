@@ -44,7 +44,18 @@ streamlit run streamlit_app.py
 
 **모델 추가 → 파일 선택 → 선택한 파일 추가**에서 `.pth`/`.pt`를 여러 개 등록합니다. **사용할 모델**에서 선택을 바꾸면 같은 손글씨로 예측합니다. 추가한 모델은 접속 세션 동안 유지됩니다. 재시작 후에도 기본으로 보이게 하려면 모델 파일을 `models/`에 넣습니다.
 
-기본으로 포함한 두 파일은 이전 D46에서 이미 학습했던 같은 CNN의 state_dict와 TorchScript입니다. 새 네 가지 모델은 Colab 노트북을 실행하면 생성됩니다. `samples/`는 로컬에 이미 있던 MNIST 테스트 이미지 0~9 각 한 장입니다.
+기본 모델은 기존 D46 CNN의 state_dict·TorchScript 두 파일과, 2026-11-06 학습한 네 실험의 TorchScript 파일입니다. 총 6개 파일이 새 접속에서도 자동으로 등록됩니다. `samples/`는 MNIST 테스트 이미지 0~9 각 한 장입니다.
+
+추가한 TorchScript의 저장된 학습 기록(테스트 10,000장):
+
+| 모델 | 학습 회차 | 저장 회차 | 테스트 정확도 |
+|---|---:|---:|---:|
+| 01 · 수업 CNN | 3 | 3 | 99.07% |
+| 02 · 학습 개선 | 10 | 9 | 99.42% |
+| 03 · 합성곱 추가 | 10 | 9 | 99.42% |
+| 04 · BatchNorm 추가 | 10 | 10 | 99.50% |
+
+실행 기록: `20261106-093734-035833`. 정확도는 각 TorchScript에 포함된 학습 결과이며, 앱에서도 **선택한 모델의 학습 기록**에서 확인할 수 있습니다.
 
 지원 모델:
 
@@ -73,7 +84,7 @@ model = nn.Sequential(
 
 GitHub 저장소에 앱 코드, `mnist_lab/`, `drawing_component/`, `requirements.txt`, `.streamlit/config.toml`, 필요한 `models/`와 `samples/`를 넣습니다. Community Cloud에서 이 저장소와 `streamlit_app.py`, Python 3.12를 선택합니다. Secrets 입력은 필요 없습니다. 업로드 파일과 접속 세션은 서비스 재시작 후 초기화될 수 있으므로 상시 모델은 저장소의 `models/`에 둡니다.
 
-2026-11-06 Streamlit Community Cloud에 공개 배포했습니다. Python 3.12와 CPU용 PyTorch를 사용합니다. 웹에는 기존 수업 CNN의 두 저장 형식이 기본 등록되어 있습니다. Colab에서 네 실험의 전체 학습을 실행하면 새 모델을 생성할 수 있습니다.
+2026-11-06 Streamlit Community Cloud에 공개 배포했습니다. Python 3.12와 CPU용 PyTorch를 사용합니다. 기본 모델 파일은 `models/`에 있으며, Colab에서 추가 실험을 실행하면 새 모델을 생성할 수 있습니다.
 
 ## 개발·검증
 
